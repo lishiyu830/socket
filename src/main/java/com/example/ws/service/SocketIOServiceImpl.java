@@ -83,6 +83,22 @@ public class SocketIOServiceImpl implements SocketIOService {
         }
     }
 
+    @Override
+    public void pushToAll(String message) {
+        clientMap.forEach((s, client) -> {
+            client.sendEvent(PUSH_EVENT, message);
+        });
+    }
+
+    @Override
+    public void pushToAllExceptOne(PushMessage pushMessage, Integer userId) {
+        clientMap.forEach((s, client) -> {
+            if (!s.equals(userId.toString())) {
+                client.sendEvent(PUSH_EVENT, pushMessage);
+            }
+        });
+    }
+
     private String getParamsByClient(SocketIOClient client) {
         Map<String, List<String>> params = client.getHandshakeData().getUrlParams();
         List<String> list = params.get("loginUserNum");

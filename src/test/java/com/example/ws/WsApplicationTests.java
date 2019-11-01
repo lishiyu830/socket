@@ -1,6 +1,8 @@
 package com.example.ws;
 
+import com.example.ws.dao.UserMapper;
 import com.example.ws.entity.PushMessage;
+import com.example.ws.entity.User;
 import com.example.ws.service.SocketIOService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,15 @@ public class WsApplicationTests {
 
     @Test
     public void contextLoads() {
+    }
+
+    @Autowired
+    UserMapper userMapper;
+
+    @Test
+    public void testMapper() {
+        User user = userMapper.selectByUsername("lsy");
+        System.out.println(user.getId());
     }
 
     @Test

@@ -15,4 +15,8 @@ public interface SocketIOService {
     void stop();
 
     void pushMessageToUser(PushMessage pushMessage);
+
+    void pushToAll(String message);
+
+    void pushToAllExceptOne(PushMessage pushMessage, Integer userId);
 }
