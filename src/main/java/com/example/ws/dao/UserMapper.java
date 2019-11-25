@@ -15,6 +15,7 @@ public interface UserMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
             @Result(property = "password", column = "password"),
+            @Result(property = "nickName", column = "nick_name"),
     })
     User selectByUsername(String username);
 

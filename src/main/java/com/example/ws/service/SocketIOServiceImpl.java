@@ -1,8 +1,12 @@
 package com.example.ws.service;
 
+import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.annotation.OnEvent;
+import com.example.ws.entity.MessageInfo;
 import com.example.ws.entity.PushMessage;
+import com.example.ws.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,9 @@ public class SocketIOServiceImpl implements SocketIOService {
 
     @Autowired
     private SocketIOServer socketIOServer;
+
+    @Autowired
+    private UserService userService;
 
 //    @PostConstruct
 //    private void autoStartup() throws Exception {
@@ -56,10 +63,14 @@ public class SocketIOServiceImpl implements SocketIOService {
             }
         });
 
-        //自定义事件
-//        socketIOServer.addEventListener(PUSH_EVENT, PushMessage.class, ((client, pushMessage, ackRequest) -> {
-//
-//        }));
+//        自定义事件
+        socketIOServer.addEventListener("sendMessage", MessageInfo.class, ((client, messageInfo, ackRequest) -> {
+            User user = userService.getUserInfo(messageInfo.getUserId());
+            messageInfo.setUsername(user.getNickName());
+            clientMap.forEach((s, clientAll) -> {
+                clientAll.sendEvent("send_message", messageInfo);
+            });
+        }));
 
         socketIOServer.start();
     }
