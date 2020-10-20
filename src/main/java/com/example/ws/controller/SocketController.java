@@ -1,5 +1,6 @@
 package com.example.ws.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.ws.entity.PushMessage;
 import com.example.ws.entity.User;
 import com.example.ws.service.SocketIOService;
@@ -31,7 +32,7 @@ public class SocketController {
         PushMessage pushMessage = new PushMessage();
         pushMessage.setLoginUserId("88");
         pushMessage.setContent(message);
-        socketIOService.pushMessageToUser(pushMessage);
+        socketIOService.pushToAll("hello");
     }
 
     @RequestMapping(value = "/sendMsg", method = {RequestMethod.POST})
@@ -43,5 +44,13 @@ public class SocketController {
         pushMessage.setLoginUsername(user.getUsername());
         pushMessage.setContent(message);
         socketIOService.pushToAllExceptOne(pushMessage, userId);
+    }
+
+    @RequestMapping(value = "/change-menu", method = {RequestMethod.GET})
+    public void changeMenu(String menu, String grid) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("menu", menu);
+        jsonObject.put("grid", grid);
+        socketIOService.pushToAll(jsonObject.toJSONString());
     }
 }

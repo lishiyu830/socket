@@ -48,19 +48,21 @@ public class SocketIOServiceImpl implements SocketIOService {
 
         //监听客户端连接
         socketIOServer.addConnectListener(client -> {
-            String loginUserNum = getParamsByClient(client);
-            if (loginUserNum != null) {
-                clientMap.put(loginUserNum, client);
+            String wsid = getParamsByClient(client);
+            if (wsid != null) {
+                clientMap.put(wsid, client);
             }
+            System.out.println("websocket connect ...");
         });
 
         //监听客户端断开连接
         socketIOServer.addDisconnectListener(client -> {
-            String loginUserNum = getParamsByClient(client);
-            if (loginUserNum != null) {
-                clientMap.remove(loginUserNum);
+            String wsid = getParamsByClient(client);
+            if (wsid != null) {
+                clientMap.remove(wsid);
                 client.disconnect();
             }
+            System.out.println("websocket disconnect ...");
         });
 
 //        自定义事件
@@ -112,7 +114,7 @@ public class SocketIOServiceImpl implements SocketIOService {
 
     private String getParamsByClient(SocketIOClient client) {
         Map<String, List<String>> params = client.getHandshakeData().getUrlParams();
-        List<String> list = params.get("loginUserNum");
+        List<String> list = params.get("wsid");
         if (list != null && list.size() > 0) {
             return list.get(0);
         }

@@ -10,6 +10,8 @@ public interface SocketIOService {
 
     public static final String PUSH_EVENT = "push_event";
 
+    public static final String CHANGE_MENU = "change_menu";
+
     void start() throws Exception;
 
     void stop();
